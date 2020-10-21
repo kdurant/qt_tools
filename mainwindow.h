@@ -3,9 +3,14 @@
 
 #include <QMainWindow>
 #include <QSettings>
+#include <QSerialPort>
+#include <QSerialPortInfo>
 
 QT_BEGIN_NAMESPACE
-namespace Ui { class MainWindow; }
+namespace Ui
+{
+class MainWindow;
+}
 QT_END_NAMESPACE
 
 class MainWindow : public QMainWindow
@@ -21,8 +26,11 @@ public:
     void initParameter();
     void saveParameter();
 
+    // 串口相关函数
+    void serialPortDetect();
+
 private:
     Ui::MainWindow *ui;
-    QSettings *configIni;
+    QSettings *     configIni;
 };
-#endif // MAINWINDOW_H
+#endif  // MAINWINDOW_H

@@ -61,10 +61,10 @@ QRadioButton#singleRadioBtn::indicator {
 }
 
 QRadioButton::indicator:unchecked{
-    image: url(:/qss/res/rbtn_unchecked.png);
+    image: url(:/qss/rbtn_unchecked.png);
 }
 QRadioButton::indicator:checked{
-    image: url(:/qss/res/rbtn_checked.png);
+    image: url(:/qss/rbtn_checked.png);
 }
 
 QComboBox
