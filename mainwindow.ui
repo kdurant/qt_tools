@@ -111,6 +111,55 @@
         </widget>
        </item>
        <item>
+        <widget class="QGroupBox" name="groupBox_2">
+         <property name="title">
+          <string>接收设置</string>
+         </property>
+         <widget class="QCheckBox" name="checkBox_2">
+          <property name="geometry">
+           <rect>
+            <x>10</x>
+            <y>90</y>
+            <width>141</width>
+            <height>23</height>
+           </rect>
+          </property>
+          <property name="text">
+           <string>自动添加换行</string>
+          </property>
+         </widget>
+         <widget class="QWidget" name="layoutWidget">
+          <property name="geometry">
+           <rect>
+            <x>10</x>
+            <y>50</y>
+            <width>232</width>
+            <height>25</height>
+           </rect>
+          </property>
+          <layout class="QHBoxLayout" name="horizontalLayout_3">
+           <item>
+            <widget class="QRadioButton" name="rbt_recvHexFormat">
+             <property name="text">
+              <string>Hex</string>
+             </property>
+             <property name="checked">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QRadioButton" name="rbt_recvAsciiFormat">
+             <property name="text">
+              <string>Ascii</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </widget>
+       </item>
+       <item>
         <widget class="QGroupBox" name="groupBox">
          <property name="title">
           <string>发送设置</string>
@@ -128,7 +177,7 @@
            <string>自动添加换行</string>
           </property>
          </widget>
-         <widget class="QWidget" name="">
+         <widget class="QWidget" name="layoutWidget">
           <property name="geometry">
            <rect>
             <x>10</x>
@@ -149,56 +198,7 @@
             </widget>
            </item>
            <item>
-            <widget class="QRadioButton" name="radioButton_3">
-             <property name="text">
-              <string>Ascii</string>
-             </property>
-            </widget>
-           </item>
-          </layout>
-         </widget>
-        </widget>
-       </item>
-       <item>
-        <widget class="QGroupBox" name="groupBox_2">
-         <property name="title">
-          <string>接收设置</string>
-         </property>
-         <widget class="QCheckBox" name="checkBox_2">
-          <property name="geometry">
-           <rect>
-            <x>10</x>
-            <y>90</y>
-            <width>141</width>
-            <height>23</height>
-           </rect>
-          </property>
-          <property name="text">
-           <string>自动添加换行</string>
-          </property>
-         </widget>
-         <widget class="QWidget" name="">
-          <property name="geometry">
-           <rect>
-            <x>10</x>
-            <y>50</y>
-            <width>232</width>
-            <height>25</height>
-           </rect>
-          </property>
-          <layout class="QHBoxLayout" name="horizontalLayout_3">
-           <item>
-            <widget class="QRadioButton" name="radioButton">
-             <property name="text">
-              <string>Hex</string>
-             </property>
-             <property name="checked">
-              <bool>true</bool>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QRadioButton" name="radioButton_2">
+            <widget class="QRadioButton" name="rbt_sendTextFormat">
              <property name="text">
               <string>Ascii</string>
              </property>
@@ -222,10 +222,10 @@
        </attribute>
        <layout class="QVBoxLayout" name="verticalLayout_2" stretch="3,1">
         <item>
-         <widget class="QPlainTextEdit" name="plainTextEdit"/>
+         <widget class="QPlainTextEdit" name="pte_recvData"/>
         </item>
         <item>
-         <widget class="QPlainTextEdit" name="plainTextEdit_2"/>
+         <widget class="QPlainTextEdit" name="pte_sendData"/>
         </item>
        </layout>
       </widget>
