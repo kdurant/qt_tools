@@ -9,10 +9,15 @@
 class UartSend
 {
 public:
-    int  textFormat;
-    bool autoSend;
-    int  autoSendTime;  // unit us
-    bool addNewLine;
+    enum TextFormat
+    {
+        HEX = 0,
+        ASCII
+    };
+    TextFormat textFormat;
+    bool       autoSend;
+    int        autoSendTime;  // unit us
+    bool       addNewLine;
 };
 
 class UartRecv
@@ -54,11 +59,21 @@ public:
 
 public slots:
     void setRecvTextFormat();
+    void serialOpen();
+
+    void serialSendData();
+    void serialReadData();
 
 private:
     Ui::MainWindow *ui;
     QSettings *     configIni;
 
-    UartRecv uartRecv;
+    QSerialPort serialPort;
+    bool        serialStatus;
+    UartRecv    uartRecv;
+    UartSend    uartSend;
+    QString     sendBuffer;
+    QByteArray  curRecvBuffer;
+    QString     totRecvBuffer;
 };
 #endif  // MAINWINDOW_H

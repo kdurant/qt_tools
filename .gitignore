@@ -15,6 +15,7 @@ tmp
 GPATH
 GRTAGS
 GTAGS*
+Debug
 
 ##################qt###################
 !compile_flags.txt

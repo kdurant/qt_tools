@@ -36,7 +36,7 @@
           <attribute name="title">
            <string>serial</string>
           </attribute>
-          <widget class="QComboBox" name="serialPortComb">
+          <widget class="QComboBox" name="comb_serialPortSelect">
            <property name="geometry">
             <rect>
              <x>100</x>
@@ -72,7 +72,7 @@
             <string>波特率</string>
            </property>
           </widget>
-          <widget class="QComboBox" name="comboBox_2">
+          <widget class="QComboBox" name="comb_serialBaudrate">
            <property name="geometry">
             <rect>
              <x>90</x>
@@ -91,6 +91,38 @@
              <string>9600</string>
             </property>
            </item>
+          </widget>
+          <widget class="QWidget" name="">
+           <property name="geometry">
+            <rect>
+             <x>20</x>
+             <y>120</y>
+             <width>231</width>
+             <height>21</height>
+            </rect>
+           </property>
+           <layout class="QHBoxLayout" name="horizontalLayout_4">
+            <item>
+             <widget class="QRadioButton" name="rbt_serialOpen">
+              <property name="text">
+               <string>Open</string>
+              </property>
+              <property name="checked">
+               <bool>false</bool>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QRadioButton" name="rbt_serialClose">
+              <property name="text">
+               <string>Close</string>
+              </property>
+              <property name="checked">
+               <bool>true</bool>
+              </property>
+             </widget>
+            </item>
+           </layout>
           </widget>
          </widget>
          <widget class="QWidget" name="tab_3">
@@ -188,7 +220,7 @@
           </property>
           <layout class="QHBoxLayout" name="horizontalLayout_2">
            <item>
-            <widget class="QRadioButton" name="radioButton_4">
+            <widget class="QRadioButton" name="rbt_sendHexFormat">
              <property name="text">
               <string>Hex</string>
              </property>
@@ -198,13 +230,26 @@
             </widget>
            </item>
            <item>
-            <widget class="QRadioButton" name="rbt_sendTextFormat">
+            <widget class="QRadioButton" name="rbt_sendAsciiFormat">
              <property name="text">
               <string>Ascii</string>
              </property>
             </widget>
            </item>
           </layout>
+         </widget>
+         <widget class="QPushButton" name="bt_serialSend">
+          <property name="geometry">
+           <rect>
+            <x>190</x>
+            <y>110</y>
+            <width>75</width>
+            <height>23</height>
+           </rect>
+          </property>
+          <property name="text">
+           <string>send</string>
+          </property>
          </widget>
         </widget>
        </item>
@@ -244,7 +289,7 @@
      <x>0</x>
      <y>0</y>
      <width>976</width>
-     <height>28</height>
+     <height>23</height>
     </rect>
    </property>
   </widget>
