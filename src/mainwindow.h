@@ -52,17 +52,17 @@ public:
 
     void initParameter();
     void saveParameter();
+    void initUI();
     void connectSignalSolt();
 
     // 串口相关函数
     void serialPortDetect();
 
+protected:
+    void timerEventer(QEvent *event);
+
 public slots:
     void setRecvTextFormat();
-    void serialOpen();
-
-    void serialSendData();
-    void serialReadData();
 
 private:
     Ui::MainWindow *ui;

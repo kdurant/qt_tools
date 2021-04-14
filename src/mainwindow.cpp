@@ -4,14 +4,15 @@
 #include <QTimer>
 #include <QDebug>
 
-MainWindow::MainWindow(QWidget *parent)
-    : QMainWindow(parent), ui(new Ui::MainWindow)
+MainWindow::MainWindow(QWidget *parent) :
+    QMainWindow(parent), ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
 
     configIni = new QSettings("./config.ini", QSettings::IniFormat);
 
     initParameter();
+    initUI();
     serialPortDetect();
     connectSignalSolt();
 }
@@ -34,16 +35,60 @@ void MainWindow::saveParameter()
     configIni->setValue("Laser/freq", 1111);
 }
 
+void MainWindow::initUI()
+{
+    setWindowTitle("调试工具");
+}
+
 void MainWindow::connectSignalSolt()
 {
-    connect(ui->rbt_recvHexFormat, SIGNAL(clicked(bool)), this, SLOT(setRecvTextFormat()));
-    connect(ui->rbt_recvAsciiFormat, SIGNAL(clicked(bool)), this, SLOT(setRecvTextFormat()));
+    connect(ui->rbt_recvHexFormat, &QAbstractButton::clicked, this, &MainWindow::setRecvTextFormat);
+    connect(ui->rbt_recvAsciiFormat, &QAbstractButton::clicked, this, &MainWindow::setRecvTextFormat);
 
-    connect(ui->rbt_serialOpen, SIGNAL(clicked(bool)), this, SLOT(serialOpen()));
-    connect(ui->rbt_serialClose, SIGNAL(clicked(bool)), this, SLOT(serialOpen()));
+    connect(ui->rbt_serialOpen, &QAbstractButton::clicked, this, [this]() {
+        serialPort.setPortName(ui->comb_serialPortSelect->currentText());
+        serialPort.setBaudRate(ui->comb_serialBaudrate->currentText().toInt());
+        serialPort.setDataBits(QSerialPort::Data8);
+        serialPort.setParity(QSerialPort::NoParity);
+        serialPort.setStopBits(QSerialPort::OneStop);
+        serialPort.setFlowControl(QSerialPort::NoFlowControl);
+        serialPort.open(QIODevice::ReadWrite);
+        ui->comb_serialPortSelect->setEnabled(false);
+    });
+    connect(ui->rbt_serialClose, &QAbstractButton::clicked, this, [this]() {
+        serialPort.close();
+        ui->comb_serialPortSelect->setEnabled(true);
+    });
 
-    connect(ui->bt_serialSend, SIGNAL(clicked(bool)), this, SLOT(serialSendData()));
-    connect(&serialPort, SIGNAL(readyRead()), this, SLOT(serialReadData()));
+    connect(ui->bt_serialSend, &QAbstractButton::clicked, this, [this]() {
+        uartSend.textFormat = ui->rbt_sendHexFormat->isChecked() ? UartSend::HEX : UartSend::ASCII;
+
+        sendBuffer = ui->pte_sendData->toPlainText();
+        if(uartSend.textFormat == UartSend::HEX)
+        {
+            serialPort.write(QByteArray::fromHex(sendBuffer.toLatin1().data()));
+        }
+        else
+        {
+            serialPort.write(sendBuffer.toUtf8());
+        }
+    });
+    connect(&serialPort, &QIODevice::readyRead, this, [this]() {
+        curRecvBuffer = serialPort.readAll();
+        totRecvBuffer += curRecvBuffer;
+
+        if(!curRecvBuffer.isEmpty())
+        {
+            if(uartRecv.textFormat == UartRecv::HEX)
+            {
+            }
+            else
+            {
+                QString data = curRecvBuffer;
+                ui->pte_recvData->appendPlainText(data);
+            }
+        }
+    });
 }
 
 void MainWindow::serialPortDetect()
@@ -75,62 +120,8 @@ void MainWindow::setRecvTextFormat()
     }
 }
 
-void MainWindow::serialOpen()
-{
-    serialStatus = ui->rbt_serialOpen->isChecked() ? 1 : 0;
-    if(serialStatus == 1)
-    {
-        serialPort.setPortName(ui->comb_serialPortSelect->currentText());
-        serialPort.setBaudRate(ui->comb_serialBaudrate->currentText().toInt());
-        serialPort.setDataBits(QSerialPort::Data8);
-        serialPort.setParity(QSerialPort::NoParity);
-        serialPort.setStopBits(QSerialPort::OneStop);
-        serialPort.setFlowControl(QSerialPort::NoFlowControl);
-        serialPort.open(QIODevice::ReadWrite);
-        ui->comb_serialPortSelect->setEnabled(false);
-    }
-    else
-    {
-        serialPort.close();
-        ui->comb_serialPortSelect->setEnabled(true);
-    }
-}
-
-void MainWindow::serialSendData()
-{
-    uartSend.textFormat = ui->rbt_sendHexFormat->isChecked() ? UartSend::HEX : UartSend::ASCII;
-
-    sendBuffer = ui->pte_sendData->toPlainText();
-    if(uartSend.textFormat == UartSend::HEX)
-    {
-        serialPort.write(QByteArray::fromHex(sendBuffer.toLatin1().data()));
-    }
-    else
-    {
-        serialPort.write(sendBuffer.toUtf8());
-    }
-}
-
-void MainWindow::serialReadData()
-{
-    //    QTimer *timer = new QTimer();
-    curRecvBuffer = serialPort.readAll();
-    totRecvBuffer += curRecvBuffer;
-
-    if(!curRecvBuffer.isEmpty())
-    {
-        if(uartRecv.textFormat == UartRecv::HEX)
-        {
-        }
-        else
-        {
-            QString data = curRecvBuffer;
-            ui->pte_recvData->appendPlainText(data);
-        }
-    }
-}
-
 void MainWindow::closeEvent(QCloseEvent *event)
 {
+    Q_UNUSED(event);
     saveParameter();
 }
