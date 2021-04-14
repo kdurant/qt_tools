@@ -92,37 +92,37 @@
             </property>
            </item>
           </widget>
-          <widget class="QWidget" name="">
+          <widget class="QRadioButton" name="rbt_serialClose">
            <property name="geometry">
             <rect>
-             <x>20</x>
-             <y>120</y>
-             <width>231</width>
-             <height>21</height>
+             <x>139</x>
+             <y>122</y>
+             <width>53</width>
+             <height>16</height>
             </rect>
            </property>
-           <layout class="QHBoxLayout" name="horizontalLayout_4">
-            <item>
-             <widget class="QRadioButton" name="rbt_serialOpen">
-              <property name="text">
-               <string>Open</string>
-              </property>
-              <property name="checked">
-               <bool>false</bool>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QRadioButton" name="rbt_serialClose">
-              <property name="text">
-               <string>Close</string>
-              </property>
-              <property name="checked">
-               <bool>true</bool>
-              </property>
-             </widget>
-            </item>
-           </layout>
+           <property name="text">
+            <string>Close</string>
+           </property>
+           <property name="checked">
+            <bool>true</bool>
+           </property>
+          </widget>
+          <widget class="QRadioButton" name="rbt_serialOpen">
+           <property name="geometry">
+            <rect>
+             <x>21</x>
+             <y>122</y>
+             <width>47</width>
+             <height>16</height>
+            </rect>
+           </property>
+           <property name="text">
+            <string>Open</string>
+           </property>
+           <property name="checked">
+            <bool>false</bool>
+           </property>
           </widget>
          </widget>
          <widget class="QWidget" name="tab_3">
@@ -160,34 +160,34 @@
            <string>自动添加换行</string>
           </property>
          </widget>
-         <widget class="QWidget" name="layoutWidget">
+         <widget class="QRadioButton" name="rbt_recvHexFormat">
           <property name="geometry">
            <rect>
-            <x>10</x>
-            <y>50</y>
-            <width>232</width>
-            <height>25</height>
+            <x>11</x>
+            <y>54</y>
+            <width>41</width>
+            <height>16</height>
            </rect>
           </property>
-          <layout class="QHBoxLayout" name="horizontalLayout_3">
-           <item>
-            <widget class="QRadioButton" name="rbt_recvHexFormat">
-             <property name="text">
-              <string>Hex</string>
-             </property>
-             <property name="checked">
-              <bool>true</bool>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QRadioButton" name="rbt_recvAsciiFormat">
-             <property name="text">
-              <string>Ascii</string>
-             </property>
-            </widget>
-           </item>
-          </layout>
+          <property name="text">
+           <string>Hex</string>
+          </property>
+          <property name="checked">
+           <bool>true</bool>
+          </property>
+         </widget>
+         <widget class="QRadioButton" name="rbt_recvAsciiFormat">
+          <property name="geometry">
+           <rect>
+            <x>129</x>
+            <y>54</y>
+            <width>53</width>
+            <height>16</height>
+           </rect>
+          </property>
+          <property name="text">
+           <string>Ascii</string>
+          </property>
          </widget>
         </widget>
        </item>
@@ -209,35 +209,6 @@
            <string>自动添加换行</string>
           </property>
          </widget>
-         <widget class="QWidget" name="layoutWidget">
-          <property name="geometry">
-           <rect>
-            <x>10</x>
-            <y>30</y>
-            <width>232</width>
-            <height>25</height>
-           </rect>
-          </property>
-          <layout class="QHBoxLayout" name="horizontalLayout_2">
-           <item>
-            <widget class="QRadioButton" name="rbt_sendHexFormat">
-             <property name="text">
-              <string>Hex</string>
-             </property>
-             <property name="checked">
-              <bool>true</bool>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QRadioButton" name="rbt_sendAsciiFormat">
-             <property name="text">
-              <string>Ascii</string>
-             </property>
-            </widget>
-           </item>
-          </layout>
-         </widget>
          <widget class="QPushButton" name="bt_serialSend">
           <property name="geometry">
            <rect>
@@ -249,6 +220,35 @@
           </property>
           <property name="text">
            <string>send</string>
+          </property>
+         </widget>
+         <widget class="QRadioButton" name="rbt_sendAsciiFormat">
+          <property name="geometry">
+           <rect>
+            <x>129</x>
+            <y>34</y>
+            <width>53</width>
+            <height>16</height>
+           </rect>
+          </property>
+          <property name="text">
+           <string>Ascii</string>
+          </property>
+         </widget>
+         <widget class="QRadioButton" name="rbt_sendHexFormat">
+          <property name="geometry">
+           <rect>
+            <x>11</x>
+            <y>34</y>
+            <width>41</width>
+            <height>16</height>
+           </rect>
+          </property>
+          <property name="text">
+           <string>Hex</string>
+          </property>
+          <property name="checked">
+           <bool>true</bool>
           </property>
          </widget>
         </widget>
