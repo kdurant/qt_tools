@@ -25,7 +25,7 @@ MainWindow::~MainWindow()
 // configIni->value("System/oceanPort")
 void MainWindow::initParameter()
 {
-    uartRecv.textFormat = ui->rbt_recvHexFormat->isChecked() ? UartRecv::HEX : UartRecv::ASCII;
+    textFormat = ui->rbt_recvHexFormat->isChecked() ? AppConfig::HEX : AppConfig::ASCII;
 }
 
 //configIni->setValue("Laser/freq", 1111);
@@ -38,6 +38,15 @@ void MainWindow::saveParameter()
 void MainWindow::initUI()
 {
     setWindowTitle("调试工具");
+    label_recvCnt = new QLabel(QString("%1").arg("接收计数：0", -20));
+    label_sendCnt = new QLabel(QString("%1").arg("发送计数：0", -20));
+    btn_resetCnt  = new QPushButton("重置计数");
+    //    btn_resetCnt->setFixedSize(40, 20);
+    btn_resetCnt->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Policy::Preferred);
+    ui->statusbar->addPermanentWidget(label_recvCnt);
+    ui->statusbar->addPermanentWidget(label_sendCnt);
+    ui->statusbar->addPermanentWidget(btn_resetCnt);
+    ui->statusbar->setStyleSheet("QStatusBar {min-height: 35;}");
 }
 
 void MainWindow::connectSignalSolt()
@@ -60,26 +69,34 @@ void MainWindow::connectSignalSolt()
         ui->comb_serialPortSelect->setEnabled(true);
     });
 
-    connect(ui->bt_serialSend, &QAbstractButton::clicked, this, [this]() {
-        uartSend.textFormat = ui->rbt_sendHexFormat->isChecked() ? UartSend::HEX : UartSend::ASCII;
-
-        sendBuffer = ui->pte_sendData->toPlainText();
-        if(uartSend.textFormat == UartSend::HEX)
+    /*
+     * 发送数据部分设置
+     */
+    connect(ui->checkBox_sendCyclic, &QCheckBox::stateChanged, this, [this](int state) {
+        if(state == Qt::Checked)
         {
-            serialPort.write(QByteArray::fromHex(sendBuffer.toLatin1().data()));
+            qint32 interval = ui->lineEdit_sendCyclicTime->text().toUInt();
+            timer1S         = startTimer(interval);
         }
         else
-        {
-            serialPort.write(sendBuffer.toUtf8());
-        }
+            killTimer(timer1S);
     });
+    connect(ui->btn_sendData, &QAbstractButton::clicked, this, [this]() {
+        sendFlow();
+    });
+    connect(ui->btn_recvBufferClear, &QPushButton::clicked, this, [this]() {
+        ui->pte_recvData->clear();
+    });
+
+    /*
+     * 接收数据部分
+     */
     connect(&serialPort, &QIODevice::readyRead, this, [this]() {
         curRecvBuffer = serialPort.readAll();
-        totRecvBuffer += curRecvBuffer;
 
         if(!curRecvBuffer.isEmpty())
         {
-            if(uartRecv.textFormat == UartRecv::HEX)
+            if(textFormat == AppConfig::HEX)
             {
             }
             else
@@ -88,6 +105,17 @@ void MainWindow::connectSignalSolt()
                 ui->pte_recvData->appendPlainText(data);
             }
         }
+
+        recvCnt += curRecvBuffer.size();
+        label_recvCnt->setText(QString("%1").arg("接收计数：" + QString::number(recvCnt), -20));
+    });
+
+    connect(btn_resetCnt, &QPushButton::clicked, this, [this]() {
+        sendCnt = 0;
+        label_sendCnt->setText(QString("%1").arg("发送计数：" + QString::number(sendCnt), -20));
+
+        recvCnt = 0;
+        label_recvCnt->setText(QString("%1").arg("接收计数：" + QString::number(recvCnt), -20));
     });
 }
 
@@ -100,12 +128,20 @@ void MainWindow::serialPortDetect()
     return;
 }
 
+void MainWindow::timerEvent(QTimerEvent *event)
+{
+    if(timer1S == event->timerId())
+    {
+        sendFlow();
+    }
+}
+
 void MainWindow::setRecvTextFormat()
 {
-    uartRecv.textFormat = ui->rbt_recvHexFormat->isChecked() ? UartRecv::HEX : UartRecv::ASCII;
+    textFormat = ui->rbt_recvHexFormat->isChecked() ? AppConfig::HEX : AppConfig::ASCII;
 
     QString recvData = ui->pte_recvData->toPlainText();
-    if(uartRecv.textFormat == UartRecv::HEX)
+    if(textFormat == AppConfig::HEX)
     {
         QByteArray  ba = recvData.toUtf8().toHex();
         QStringList s;
@@ -118,6 +154,42 @@ void MainWindow::setRecvTextFormat()
     {
         ui->pte_recvData->setPlainText(QByteArray::fromHex(recvData.toUtf8()));
     }
+}
+
+void MainWindow::sendFlow()
+{
+    if(ui->checkBox_sendShowContent->isChecked())
+    {
+        // yyyy.MM.dd hh:mm:ss.zzz ddd
+        QString prefix = QDateTime::currentDateTime().toString("hh:mm:ss.zzz");
+        prefix += "--> ";
+        ui->pte_recvData->appendPlainText(prefix + ui->pte_sendData->toPlainText());
+    }
+
+    QString data = ui->pte_sendData->toPlainText();
+    ui->listWidget_sendHistory->addItem(data);
+
+    if(ui->checkBox_sendAddNewLine->isChecked())
+        data.append("\r\n");
+    sendUserData(data);
+}
+
+void MainWindow::sendUserData(QString &data)
+{
+    if(data.isEmpty())
+        return;
+
+    textFormat = ui->rbtn_sendHexFormat->isChecked() ? AppConfig::HEX : AppConfig::ASCII;
+
+    QByteArray frame;
+    if(textFormat == AppConfig::HEX)
+        frame = QByteArray::fromHex(data.toLatin1().data());
+    else
+        frame = data.toUtf8();
+    serialPort.write(frame);
+
+    sendCnt += frame.size();
+    label_sendCnt->setText(QString("%1").arg("发送计数：" + QString::number(sendCnt), -20));
 }
 
 void MainWindow::closeEvent(QCloseEvent *event)

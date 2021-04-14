@@ -1,12 +1,16 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
+#include <QtCore>
 #include <QMainWindow>
 #include <QSettings>
 #include <QSerialPort>
 #include <QSerialPortInfo>
+#include <QDateTime>
+#include <QLabel>
+#include <QPushButton>
 
-class UartSend
+class AppConfig
 {
 public:
     enum TextFormat
@@ -14,23 +18,6 @@ public:
         HEX = 0,
         ASCII
     };
-    TextFormat textFormat;
-    bool       autoSend;
-    int        autoSendTime;  // unit us
-    bool       addNewLine;
-};
-
-class UartRecv
-{
-public:
-    enum TextFormat
-    {
-        HEX = 0,
-        ASCII
-    };
-    TextFormat textFormat;
-    bool       addNewLine;
-    bool       addTimestamp;
 };
 
 QT_BEGIN_NAMESPACE
@@ -59,21 +46,28 @@ public:
     void serialPortDetect();
 
 protected:
-    void timerEventer(QEvent *event);
+    void timerEvent(QTimerEvent *event);
 
 public slots:
     void setRecvTextFormat();
+    void sendFlow(void);
+    void sendUserData(QString &data);
 
 private:
     Ui::MainWindow *ui;
     QSettings *     configIni;
+    qint32          timer1S;
 
     QSerialPort serialPort;
-    bool        serialStatus;
-    UartRecv    uartRecv;
-    UartSend    uartSend;
-    QString     sendBuffer;
-    QByteArray  curRecvBuffer;
-    QString     totRecvBuffer;
+
+    AppConfig::TextFormat textFormat;
+
+    QByteArray curRecvBuffer;
+
+    quint32      recvCnt{0};
+    quint32      sendCnt{0};
+    QLabel *     label_recvCnt;
+    QLabel *     label_sendCnt;
+    QPushButton *btn_resetCnt;
 };
 #endif  // MAINWINDOW_H

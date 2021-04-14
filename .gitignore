@@ -18,6 +18,7 @@ GTAGS*
 Debug
 
 ##################qt###################
+bin
 !compile_flags.txt
 
 # C++ objects and libs
